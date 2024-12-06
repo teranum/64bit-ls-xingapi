@@ -466,33 +466,49 @@ protected:
 	FP_ISCHARTLIB				m_fpIsChartLib;
 };
 
-BOOL IXingAPI::Init(LPCTSTR szPath)
+BOOL IXingAPI::Init(LPCTSTR szXingFolder)
 {
 	if( IsInit() ) return TRUE;
 
-	return LoadLibHelper( szPath );
+	return LoadLibHelper(szXingFolder);
 }
 
-BOOL IXingAPI::LoadLibHelper( LPCTSTR szPath )
+BOOL IXingAPI::LoadLibHelper( LPCTSTR szXingFolder )
 {
+#ifdef _WIN64
+	LPCTSTR szDllName = "xingAPI64.dll";
+#else
+	LPCTSTR szDllName = "xingAPI.dll";
+#endif // _WIN64
 	TCHAR szCommLib[MAX_PATH] = { 0 };
 
-	if( szPath == NULL || strlen( szPath ) == 0 )
+	if(szXingFolder == NULL || strlen(szXingFolder) == 0 )
 	{
-		lstrcpy( szCommLib, _T( "XingAPI.dll" ) );
+		lstrcpy( szCommLib, szDllName);
 	}
 	else
 	{
-		_stprintf_s( szCommLib, _T( "%s\\XingAPI.dll" ), szPath );
+		_stprintf_s( szCommLib, _T( "%s\\%s" ), szXingFolder, szDllName);
 	}
 
 	TCHAR szCurrentDir[MAX_PATH] = { 0 };
 	GetCurrentDirectory( MAX_PATH, szCurrentDir );
-	SetCurrentDirectory( szPath );
+	SetCurrentDirectory(szXingFolder);
 	m_hModule = ::LoadLibrary( szCommLib );
 	SetCurrentDirectory( szCurrentDir );
 
-	return NULL == m_hModule ? FALSE : TRUE;
+	if (NULL == m_hModule)
+		return FALSE;
+#ifdef _WIN64
+	auto pfnInit = (BOOL(*) (LPCTSTR))GetProcAddress(m_hModule, "XING64_Init");
+	if (!pfnInit(szXingFolder))
+	{
+		::FreeLibrary(m_hModule);
+		m_hModule = NULL;
+		return FALSE;
+	}
+#endif // _WIN64
+	return TRUE;
 }
 
 void IXingAPI::Uninit()

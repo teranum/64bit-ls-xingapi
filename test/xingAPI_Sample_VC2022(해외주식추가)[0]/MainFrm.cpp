@@ -54,26 +54,43 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//-----------------------------------------------------------------------------------------
 	// X-ing API 초기화
-	
-	// 현재 Directroy에서 먼저 초기화 한후에 실패하면
-	if( g_iXingAPI.Init() == FALSE )
+	//-----------------------------------------------------------------------------------------
+
+	// 설치된 XingAPI의 경로를 얻어온다.
+#ifdef _WIN64
+	LPCTSTR szClassPath = "WOW6432Node\\CLSID\\{7FEF321C-6BFD-413C-AA80-541A275434A1}\\InprocServer32";
+#else
+	LPCTSTR szClassPath = "CLSID\\{7FEF321C-6BFD-413C-AA80-541A275434A1}\\InprocServer32";
+#endif // _WIN64
+	HKEY hKey;
+	CString szXingFolder;
+	if (RegOpenKeyEx(HKEY_CLASSES_ROOT, szClassPath, 0, KEY_READ, &hKey) == ERROR_SUCCESS)
 	{
-		// 메인 Directory를 찾은후에 
-		CString strPath;
-		int nLen = (int)GetModuleFileName( AfxGetInstanceHandle(), strPath.GetBuffer( MAX_PATH ), MAX_PATH );
-		strPath.ReleaseBuffer( nLen );
-		int nFind = strPath.ReverseFind( '\\' );
-		if( nFind > 0 )
+		char szPath[MAX_PATH];
+		DWORD dwType = REG_SZ;
+		DWORD dwSize = MAX_PATH;
+		if (RegQueryValueEx(hKey, "", NULL, &dwType, (LPBYTE)szPath, &dwSize) == ERROR_SUCCESS)
 		{
-			strPath = strPath.Left( nFind );
+			szXingFolder = szPath;
+			int nFind = szXingFolder.ReverseFind('\\');
+			if (nFind > 0)
+			{
+				szXingFolder = szXingFolder.Left(nFind);
+			}
 		}
-		
-		// 메인 Directory를 입력하여 초기화 한다.
-		if( g_iXingAPI.Init( strPath ) == FALSE )
-		{
-			MessageBox( "xingAPI DLL을 Load 할 수 없습니다.");
-			return -1;
-		}
+		RegCloseKey(hKey);
+	}
+
+	if (szXingFolder.GetLength() == 0)
+	{
+		MessageBox("XingAPI 가 설치되어 있지 않습니다.");
+		return -1;
+	}
+	
+	if( g_iXingAPI.Init(szXingFolder) == FALSE )
+	{
+		MessageBox("DLL을 Load 할 수 없습니다.");
+		return -1;
 	}
 	//-----------------------------------------------------------------------------------------
 	return 0;
