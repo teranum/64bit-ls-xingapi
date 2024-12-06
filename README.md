@@ -1,14 +1,16 @@
 # 64bit-ls-xingapi (dll mode)
 LS증권 64비트 XingApi
-DLL방식만 지원 (COM방식 지원안함)
+DLL버전만 지원 (COM버전 지원안함)
 
 # 설치방법
-xingAPI64.zip압축 해제후 파일들을 LS증권 XingApi폴더로 이동 (C:\LS_SEC\xingAPI)
+xingAPI64.zip 압축 해제후 파일들을 LS증권 XingApi폴더로 이동 (C:\LS_SEC\xingAPI)
 
-# Cpp파일수정
-1. LoadLibrary("xingAPI64.dll")
-2. XING64_Init("C:\LS_SEC\xingAPI") 호출
-기타 소스는 32비트와 동일
+# cpp 소스파일수정
+  1. LoadLibrary("xingAPI64.dll")
+  2. BOOL XING64_Init(LPCTSTR xing_folder_path) 함수 호출<br/>
+      XING64_Init("xingAPI64.dll")<br/>
+       true: 성공, false: XingApi설치 안됨
+  4. 기타 소스코드는 32비트와 동일
 
 # 참고
 * 메모리 IPC통신을 이용하여 LS증권의 32비트 모듈과 데이터 통신진행.
