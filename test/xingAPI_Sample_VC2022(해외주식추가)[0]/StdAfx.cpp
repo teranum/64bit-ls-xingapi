@@ -86,7 +86,7 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		// 뒤의 빈자리는 ' ' 로 채움
 
 		// 버퍼크기가 원 데이터보다 작다면 데이터는 짤려야 하므로 에러발생
-		int nSrcLen = strlen( pszSrc );
+		int nSrcLen = (int)strlen( pszSrc );
 
 		// 먼저 Space를 채우고
 		FillMemory( psData, nSize, ' ' );
@@ -104,7 +104,7 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		// 앞의 빈자리는 '0' 으로 채움
 
 		// 버퍼크기가 원 데이터보다 작다면 데이터는 짤려야 하므로 에러발생
-		int nSrcLen = strlen( pszSrc );
+		int nSrcLen = (int)strlen( pszSrc );
 		ASSERT( nSize >= nSrcLen );
 
 		// 먼저 0 으로 채우고
@@ -129,7 +129,7 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		// 소숫점 위치를 기준으로 정렬
 		// 소숫점을 찍지 않으며 정수부의 빈자리와 소수부의 빈자리는 0으로 채움
 
-		int nSrcLen = strlen( pszSrc );
+		int nSrcLen = (int)strlen( pszSrc );
 
 		// 먼저 0 으로 채우고
 		FillMemory( psData, nSize, '0' );
@@ -141,13 +141,13 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		LPTSTR psz = (LPTSTR)_tcschr( pszSrc, '.' );
 		if( psz == NULL )		// 소수부가 없다.
 		{
-			nSrcIntLen = strlen( pszSrc );
+			nSrcIntLen = (int)strlen( pszSrc );
 			nSrcDotLen = 0;
 		}
 		else					// 소수부가 있다.
 		{
-			nSrcIntLen = psz - pszSrc;
-			nSrcDotLen = strlen( pszSrc ) - nSrcIntLen - 1;
+			nSrcIntLen = (int)(psz - pszSrc);
+			nSrcDotLen = (int)strlen( pszSrc ) - nSrcIntLen - 1;
 		}
 
 		// 정수부를 넣는다.
@@ -174,7 +174,7 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		// 소숫점 위치를 기준으로 정렬
 		// 소숫점을 찍지 않으며 정수부의 빈자리와 소수부의 빈자리는 0으로 채움
 		
-		int nSrcLen = strlen( pszSrc );
+		int nSrcLen = (int)strlen( pszSrc );
 		
 		// 먼저 0 으로 채우고
 		FillMemory( psData, nSize, '0' );
@@ -186,13 +186,13 @@ void SetPacketData( char* psData, int nSize, LPCTSTR pszSrc, int nType, int nDot
 		LPTSTR psz = (LPTSTR)_tcschr( pszSrc, '.' );
 		if( psz == NULL )		// 소수부가 없다.
 		{
-			nSrcIntLen = strlen( pszSrc );
+			nSrcIntLen = (int)strlen( pszSrc );
 			nSrcDotLen = 0;
 		}
 		else					// 소수부가 있다.
 		{
-			nSrcIntLen = psz - pszSrc;
-			nSrcDotLen = strlen( pszSrc ) - nSrcIntLen - 1;
+			nSrcIntLen = (int)(psz - pszSrc);
+			nSrcDotLen = (int)strlen( pszSrc ) - nSrcIntLen - 1;
 		}
 		
 		// 정수부를 넣는다.
