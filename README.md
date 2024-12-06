@@ -8,7 +8,7 @@ xingAPI64.zip 압축 해제후 파일들을 LS증권 XingApi폴더로 이동 (C:
 # cpp 소스파일수정
   1. LoadLibrary("xingAPI64.dll")
   2. BOOL XING64_Init(LPCTSTR xing_folder_path) 함수 호출<br/>
-      XING64_Init("xingAPI64.dll")<br/>
+      XING64_Init("C:\LS_SEC\xingAPI")<br/>
        true: 성공, false: XingApi설치 안됨
   4. 기타 소스코드는 32비트와 동일
 
