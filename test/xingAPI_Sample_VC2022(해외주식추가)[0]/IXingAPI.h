@@ -499,15 +499,6 @@ BOOL IXingAPI::LoadLibHelper( LPCTSTR szXingFolder )
 
 	if (NULL == m_hModule)
 		return FALSE;
-#ifdef _WIN64
-	auto pfnInit = (BOOL(*) (LPCTSTR))GetProcAddress(m_hModule, "XING64_Init");
-	if (!pfnInit(szXingFolder))
-	{
-		::FreeLibrary(m_hModule);
-		m_hModule = NULL;
-		return FALSE;
-	}
-#endif // _WIN64
 	return TRUE;
 }
 
