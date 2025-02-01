@@ -55,39 +55,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//-----------------------------------------------------------------------------------------
 	// X-ing API 초기화
 	//-----------------------------------------------------------------------------------------
-
-	// 설치된 XingAPI의 경로를 얻어온다.
-#ifdef _WIN64
-	LPCTSTR szClassPath = "WOW6432Node\\CLSID\\{7FEF321C-6BFD-413C-AA80-541A275434A1}\\InprocServer32";
-#else
-	LPCTSTR szClassPath = "CLSID\\{7FEF321C-6BFD-413C-AA80-541A275434A1}\\InprocServer32";
-#endif // _WIN64
-	HKEY hKey;
-	CString szXingFolder;
-	if (RegOpenKeyEx(HKEY_CLASSES_ROOT, szClassPath, 0, KEY_READ, &hKey) == ERROR_SUCCESS)
-	{
-		char szPath[MAX_PATH];
-		DWORD dwType = REG_SZ;
-		DWORD dwSize = MAX_PATH;
-		if (RegQueryValueEx(hKey, "", NULL, &dwType, (LPBYTE)szPath, &dwSize) == ERROR_SUCCESS)
-		{
-			szXingFolder = szPath;
-			int nFind = szXingFolder.ReverseFind('\\');
-			if (nFind > 0)
-			{
-				szXingFolder = szXingFolder.Left(nFind);
-			}
-		}
-		RegCloseKey(hKey);
-	}
-
-	if (szXingFolder.GetLength() == 0)
-	{
-		MessageBox("XingAPI 가 설치되어 있지 않습니다.");
-		return -1;
-	}
-	
-	if( g_iXingAPI.Init(szXingFolder) == FALSE )
+	if (g_iXingAPI.Init("C:\\LS_SEC\\xingAPI") == FALSE)
 	{
 		MessageBox("DLL을 Load 할 수 없습니다.");
 		return -1;
